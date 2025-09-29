@@ -265,7 +265,7 @@ const Results = ({ data }: ResultsProps) => {
                   <p className="text-muted-foreground mb-4">
                     Map visualization will display sample locations with color-coded contamination levels
                   </p>
-                  <Button variant="scientific">
+                  <Button variant="official">
                     Load Map Visualization
                   </Button>
                 </div>
@@ -287,7 +287,7 @@ const Results = ({ data }: ResultsProps) => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Button variant="scientific" onClick={handleDownloadReport} className="h-auto p-6">
+                <Button variant="official" onClick={handleDownloadReport} className="h-auto p-6">
                   <div className="text-center">
                     <Download className="h-8 w-8 mx-auto mb-2" />
                     <h3 className="font-semibold">PDF Report</h3>

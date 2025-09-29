@@ -103,13 +103,13 @@ export default {
       },
       backgroundImage: {
         "gradient-primary": "var(--gradient-primary)",
-        "gradient-water": "var(--gradient-water)",
-        "gradient-data": "var(--gradient-data)",
+        "gradient-tricolor": "var(--gradient-tricolor)",
+        "gradient-official": "var(--gradient-official)",
         "gradient-hero": "var(--gradient-hero)",
       },
       boxShadow: {
-        "scientific": "var(--shadow-scientific)",
-        "data": "var(--shadow-data)",
+        "official": "var(--shadow-official)",
+        "card": "var(--shadow-card)",
         "elevated": "var(--shadow-elevated)",
       },
     },

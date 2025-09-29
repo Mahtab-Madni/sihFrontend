@@ -2,62 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Aqualyx Design System - Water-inspired scientific interface */
+/* Aqualyx Design System - Government of India Portal Theme */
 
 @layer base {
   :root {
-    /* Scientific Water Theme */
-    --background: 210 20% 98%;
-    --foreground: 210 15% 15%;
+    /* Government of India Color Scheme */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 15% 15%;
+    --card-foreground: 0 0% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 15% 15%;
+    --popover-foreground: 0 0% 12%;
 
-    /* Primary: Deep Ocean Blue */
-    --primary: 205 85% 25%;
+    /* Primary: Government Blue */
+    --primary: 214 84% 33%;
     --primary-foreground: 0 0% 98%;
-    --primary-light: 205 75% 35%;
-    --primary-dark: 205 95% 15%;
+    --primary-light: 214 74% 45%;
+    --primary-dark: 214 94% 25%;
 
-    /* Secondary: Scientific Teal */
-    --secondary: 180 45% 85%;
-    --secondary-foreground: 180 85% 15%;
+    /* Secondary: Official Saffron */
+    --secondary: 28 100% 65%;
+    --secondary-foreground: 0 0% 12%;
 
     --muted: 210 40% 96%;
-    --muted-foreground: 210 15% 50%;
+    --muted-foreground: 0 0% 45%;
 
-    /* Accent: Aqua Blue */
-    --accent: 185 75% 45%;
+    /* Accent: India Green */
+    --accent: 120 60% 35%;
     --accent-foreground: 0 0% 98%;
 
     /* Status Colors for Contamination Levels */
-    --safe: 142 76% 36%;
+    --safe: 120 70% 35%;
     --safe-foreground: 0 0% 98%;
-    --moderate: 45 93% 47%;
-    --moderate-foreground: 210 15% 15%;
-    --unsafe: 0 84% 60%;
+    --moderate: 45 100% 50%;
+    --moderate-foreground: 0 0% 12%;
+    --unsafe: 0 85% 55%;
     --unsafe-foreground: 0 0% 98%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 85% 55%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 210 30% 88%;
-    --input: 210 25% 92%;
-    --ring: 205 85% 25%;
+    --border: 214 20% 88%;
+    --input: 214 15% 94%;
+    --ring: 214 84% 33%;
 
-    /* Scientific Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(205 85% 25%), hsl(185 75% 45%));
-    --gradient-water: linear-gradient(180deg, hsl(185 75% 45%), hsl(205 85% 25%));
-    --gradient-data: linear-gradient(90deg, hsl(180 45% 85%), hsl(185 55% 75%));
-    --gradient-hero: linear-gradient(135deg, hsl(205 95% 15%) 0%, hsl(185 85% 35%) 50%, hsl(180 75% 45%) 100%);
+    /* Government Portal Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(214 84% 33%), hsl(214 74% 45%));
+    --gradient-tricolor: linear-gradient(180deg, hsl(28 100% 65%) 0%, hsl(0 0% 100%) 50%, hsl(120 60% 35%) 100%);
+    --gradient-official: linear-gradient(90deg, hsl(214 84% 33%), hsl(214 74% 45%));
+    --gradient-hero: linear-gradient(135deg, hsl(214 94% 25%) 0%, hsl(214 84% 33%) 50%, hsl(214 74% 45%) 100%);
 
-    /* Scientific Shadows */
-    --shadow-scientific: 0 4px 20px -2px hsl(205 85% 25% / 0.15);
-    --shadow-data: 0 2px 12px -2px hsl(185 75% 45% / 0.2);
-    --shadow-elevated: 0 8px 32px -4px hsl(205 85% 25% / 0.25);
+    /* Government Portal Shadows */
+    --shadow-official: 0 4px 20px -2px hsl(214 84% 33% / 0.15);
+    --shadow-card: 0 2px 12px -2px hsl(214 84% 33% / 0.1);
+    --shadow-elevated: 0 8px 32px -4px hsl(214 84% 33% / 0.2);
 
     /* Animation */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -154,13 +154,21 @@
     }
   }
 
-  /* Scientific typography */
+  /* Government Portal Typography */
   .scientific-heading {
     @apply text-primary font-bold tracking-tight;
   }
 
+  .official-heading {
+    @apply text-foreground font-bold tracking-tight;
+  }
+
   .data-value {
-    @apply font-mono text-sm bg-secondary/50 px-2 py-1 rounded;
+    @apply font-mono text-sm bg-secondary/20 px-2 py-1 rounded border;
+  }
+
+  .government-text {
+    @apply text-foreground/80 text-sm;
   }
 
   /* Status indicators */

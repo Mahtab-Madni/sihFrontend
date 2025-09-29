@@ -57,7 +57,7 @@ const Dashboard = ({ onSectionChange }: DashboardProps) => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
-                variant="water" 
+                variant="tricolor" 
                 size="lg"
                 onClick={() => onSectionChange('upload')}
                 className="text-lg px-8 py-4"

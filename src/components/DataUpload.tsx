@@ -197,7 +197,7 @@ const DataUpload = ({ onDataUpload, onSectionChange }: DataUploadProps) => {
           {/* Sample Data Option */}
           <div className="text-center">
             <p className="text-muted-foreground mb-4">Or try with sample data</p>
-            <Button variant="scientific" onClick={handleUseSampleData}>
+            <Button variant="official" onClick={handleUseSampleData}>
               Use Sample Dataset
             </Button>
           </div>
@@ -262,7 +262,7 @@ const DataUpload = ({ onDataUpload, onSectionChange }: DataUploadProps) => {
           {isValidData && (
             <div className="text-center">
               <Button
-                variant="water"
+                variant="tricolor"
                 size="lg"
                 onClick={handleProceedToAnalysis}
                 className="text-lg px-8"
