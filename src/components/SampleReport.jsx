@@ -46,13 +46,43 @@ function SampleDetails({ sample, onBack }) {
             <strong>TDS:</strong> {sample.waterQuality?.tds}
           </p>
           <p>
-            <strong>Hardness:</strong> {sample.waterQuality?.hardness}
+            <strong>Hardness:</strong> {sample.waterQuality?.totaHardness}
           </p>
           <p>
             <strong>Fluoride:</strong> {sample.waterQuality?.fluoride}
           </p>
           <p>
             <strong>Nitrate:</strong> {sample.waterQuality?.nitrate}
+          </p>
+          <p>
+            <strong>Sulphate:</strong> {sample.waterQuality?.sulfate}
+          </p>
+          <p>
+            <strong>Chloride:</strong> {sample.waterQuality?.chloride}
+          </p>
+          <p>
+            <strong>Sodium:</strong> {sample.waterQuality?.sodium}
+          </p>
+          <p>
+            <strong>Arsenic:</strong> {sample.waterQuality?.arsenic}
+          </p>
+          <p>
+            <strong>Urnamium:</strong> {sample.waterQuality?.uranium}
+          </p>
+          <p>
+            <strong>Calcium:</strong> {sample.waterQuality?.calcium}
+          </p>
+          <p>
+            <strong>Magnesium:</strong> {sample.waterQuality?.magnesium}
+          </p>
+          <p>
+            <strong>Potassium:</strong> {sample.waterQuality?.potassium}
+          </p>
+          <p>
+            <strong>Bicarbonate:</strong> {sample.waterQuality?.bicarbonate}
+          </p>
+          <p>
+            <strong>Phosphate:</strong> {sample.waterQuality?.phosphate}
           </p>
         </section>
 
