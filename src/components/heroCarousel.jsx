@@ -9,8 +9,6 @@ import hero5 from '@/assets/hero5.jpg';
 import hero6 from '@/assets/hero6.jpg';
 import hero7 from '@/assets/hero7.jpg';
 
-
-
 const heroImages = [heroWater, hero3, hero4,hero5,hero6,hero7];
 
 const HeroCarousel = ({ onSectionChange }) => {
@@ -34,55 +32,55 @@ const HeroCarousel = ({ onSectionChange }) => {
 
   return (
     <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden">
-      {/* Images */}
+      {/* Background Images */}
       {heroImages.map((img, index) => (
         <img
           key={index}
           src={img}
           alt={`hero-${index}`}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-            index === current ? 'opacity-100' : 'opacity-0'
+            index === current ? "opacity-100" : "opacity-0"
           } brightness-50`}
         />
       ))}
 
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent z-10"></div>
+
       {/* Content Overlay */}
-      <div className="relative container mx-auto px-4 py-16 md:py-24 flex flex-col justify-center h-full text-white max-w-2xl"
-      style={{ display: 'flex', justifyContent: 'left', alignItems:'left' }}>
-        <h1 className="text-3xl md:text-4xl font-bold mb-4" style={{display:'flex', justifyContent:'left', alignItems:'left'}}>
+      <div className="relative z-20 container mx-auto px-6 py-16 md:py-24 flex flex-col justify-center items-start h-full text-white max-w-2xl text-left">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
           Advanced Water Quality Analysis Platform
         </h1>
-        <p className="text-lg mb-6"  style={{outlineColor:'black',     display:'flex', justifyContent:'left', alignItems:'left'}}>
-          Comprehensive tools for analyzing groundwater contamination and generating scientific reports for environmental monitoring.
+        <p className="text-lg mb-6 border-l-4 border-white pl-4">
+          Comprehensive tools for analyzing groundwater contamination and
+          generating scientific reports for environmental monitoring.
         </p>
-        <div className="flex flex-wrap gap-3">
-          <Button
-            size="lg"
-            onClick={() => onSectionChange('upload')}
-            className="bg-primary hover:bg-primary/90"
+        <div className="flex flex-wrap gap-4">
+          <button
+            onClick={() => onSectionChange("upload")}
+            className="px-6 py-3 text-lg font-semibold rounded-md bg-primary hover:bg-primary/90 transition-colors"
           >
             Upload Data
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            className="bg-background/20 hover:bg-background/30 border-white text-white"
-          >
+          </button>
+          <button className="px-6 py-3 text-lg font-semibold rounded-md border border-white bg-white/10 hover:bg-white/20 text-white transition-colors">
             Learn More
-          </Button>
+          </button>
         </div>
       </div>
 
-      {/* Arrows */}
+      {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-2 top-1/2 -translate-y-1/2 text-white bg-black/30 hover:bg-black/50 rounded-full p-2 z-10"
+        aria-label="Previous Slide"
+        className="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-black/40 hover:bg-black/60 rounded-full p-3 z-30"
       >
         &#8592;
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-2 top-1/2 -translate-y-1/2 text-white bg-black/30 hover:bg-black/50 rounded-full p-2 z-10"
+        aria-label="Next Slide"
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-black/40 hover:bg-black/60 rounded-full p-3 z-30"
       >
         &#8594;
       </button>

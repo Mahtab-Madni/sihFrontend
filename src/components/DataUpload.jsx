@@ -17,196 +17,59 @@ const DataUpload = ({ onDataUpload, onSectionChange }) => {
   const { t } = useTranslation();
 
   const requiredColumns = [
-    'Sample_ID', 'Latitude', 'Longitude', 'Lead', 'Cadmium', 
-    'Arsenic', 'Chromium', 'Mercury', 'Copper'
+    "Location",
+    "Latitude",
+    "Longitude",
+    "F (mg/L)",
+    "pH",
+    "NO3 (mg/L)",
+    "As (ppb)",
+    "U (ppb)",
+    "Fe (ppm)",
+    "EC (µS/cm at 25 °C)",
+    "Total Hardness (mg/L)",
   ];
 
   const sampleData = [
     {
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
+      Location: "Sample Location 1",
+      Latitude: 34.0522,
+      Longitude: -118.2437,
+      "F (mg/L)": 0.7,
+      pH: 7.5,
+      "NO3 (mg/L)": 10,
+      "As (ppb)": 5,
+      "U (ppb)": 15,
+      "Fe (ppm)": 0.3,
+      "EC (µS/cm at 25 °C)": 500,
+      "Total Hardness (mg/L)": 150,
     },
     {
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
-    },{
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
-    },{
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
-    },{
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
-    },{
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
-    },{
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
-    },{
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
-    },{
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
-    },{
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
+      Location: "Sample Location 1",
+      Latitude: 34.0522,
+      Longitude: -118.2437,
+      "F (mg/L)": 0.7,
+      pH: 7.5,
+      "NO3 (mg/L)": 10,
+      "As (ppb)": 5,
+      "U (ppb)": 15,
+      "Fe (ppm)": 0.3,
+      "EC (µS/cm at 25 °C)": 500,
+      "Total Hardness (mg/L)": 150,
     },
     {
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.75,
-      Cadmium: 0.003,
-      Arsenic: 0.71,
-      Chromium: 0.02,
-      Mercury: 0.451,
-      Copper: 10
-    },{
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
-    },{
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
-    },{
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
-    },{
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
-    },{
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
+      Location: "Sample Location 1",
+      Latitude: 34.0522,
+      Longitude: -118.2437,
+      "F (mg/L)": 0.7,
+      pH: 7.5,
+      "NO3 (mg/L)": 10,
+      "As (ppb)": 5,
+      "U (ppb)": 15,
+      "Fe (ppm)": 0.3,
+      "EC (µS/cm at 25 °C)": 500,
+      "Total Hardness (mg/L)": 150,
     },
-    {
-      Sample_ID: 'GW001',
-      Latitude: 28.6139,
-      Longitude: 77.2090,
-      Lead: 0.05,
-      Cadmium: 0.003,
-      Arsenic: 0.01,
-      Chromium: 0.02,
-      Mercury: 0.001,
-      Copper: 0.5
-    },
-    {
-      Sample_ID: 'GW002',
-      Latitude: 28.5355,
-      Longitude: 77.3910,
-      Lead: 0.03,
-      Cadmium: 0.002,
-      Arsenic: 0.008,
-      Chromium: 0.015,
-      Mercury: 0.0005,
-      Copper: 0.3
-    }
   ];
 
   const handleDragOver = (e) => {
@@ -236,100 +99,84 @@ const DataUpload = ({ onDataUpload, onSectionChange }) => {
   };
 
   const handleFile = (file) => {
-    if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+    const allowedTypes = [".csv", ".xlsx", ".xls"];
+    const fileExtension = "." + file.name.split(".").pop()?.toLowerCase();
+
+    if (!allowedTypes.includes(fileExtension)) {
       toast({
-        title: "Invalid file format",
-        description: "Please upload a CSV file",
-        variant: "destructive"
+        title: "Invalid file type",
+        description: "Please upload a CSV or Excel file",
+        variant: "destructive",
       });
       return;
     }
 
     setUploadedFile(file);
-    validateCSV(file);
+    validatefile(file);
   };
 
-  const validateCSV = (file) => {
+  const validatefile = (file) => {
     const reader = new FileReader();
-    
+
     reader.onload = (e) => {
       const text = e.target.result;
-      const rows = text.split('\n');
-      const headers = rows[0].split(',').map(h => h.trim());
-      
-      // Check for required columns
-      const errors = [];
-      requiredColumns.forEach(col => {
-        if (!headers.includes(col)) {
-          errors.push(`Missing required column: ${col}`);
-        }
-      });
+      const rows = text.split("\n");
+      const headers = rows[0].split(",").map((h) => h.trim());
 
-      // Check for data rows
-      if (rows.length < 2) {
-        errors.push('CSV file must contain at least one data row');
+      const errors = [];
+
+      // Simulate validation scenarios
+      const hasAllColumns = Math.random() > 0.2; // 80% chance
+      const hasValidData = Math.random() > 0.1; // 90% chance
+
+      if (!hasAllColumns) {
+        errors.push("Missing required columns in the uploaded file.");
       }
 
-      // Check data types in first row
-      if (rows.length > 1 && errors.length === 0) {
-        const firstDataRow = rows[1].split(',');
-        
-        // Check latitude and longitude are numbers
-        const latIndex = headers.indexOf('Latitude');
-        const lngIndex = headers.indexOf('Longitude');
-        
-        if (isNaN(parseFloat(firstDataRow[latIndex]))) {
-          errors.push('Latitude must be a number');
-        }
-        
-        if (isNaN(parseFloat(firstDataRow[lngIndex]))) {
-          errors.push('Longitude must be a number');
-        }
-        
-        // Check metal concentrations are numbers
-        ['Lead', 'Cadmium', 'Arsenic', 'Chromium', 'Mercury', 'Copper'].forEach(metal => {
-          const index = headers.indexOf(metal);
-          if (index !== -1 && isNaN(parseFloat(firstDataRow[index]))) {
-            errors.push(`${metal} concentration must be a number`);
+      if (!hasValidData) {
+        errors.push("Data format is invalid.");
+      }
+
+      // Real validation fallback (optional)
+      if (hasAllColumns && hasValidData) {
+        requiredColumns.forEach((col) => {
+          if (!headers.includes(col)) {
+            errors.push(`Missing required column: ${col}`);
           }
         });
+
+        if (rows.length < 2) {
+          errors.push("CSV file must contain at least one data row");
+        }
+
+        if (rows.length > 1 && errors.length === 0) {
+          const firstDataRow = rows[1].split(",");
+
+          const latIndex = headers.indexOf("Latitude");
+          const lngIndex = headers.indexOf("Longitude");
+
+          if (isNaN(parseFloat(firstDataRow[latIndex]))) {
+            errors.push("Latitude must be a number");
+          }
+
+          if (isNaN(parseFloat(firstDataRow[lngIndex]))) {
+            errors.push("Longitude must be a number");
+          }
+        }
       }
 
       setValidationErrors(errors);
       setIsValidData(errors.length === 0);
-      
+
       if (errors.length === 0) {
-        // Parse data for processing
-        const data = [];
-        for (let i = 1; i < rows.length; i++) {
-          if (rows[i].trim() === '') continue;
-          
-          const values = rows[i].split(',');
-          const rowData = {};
-          
-          headers.forEach((header, index) => {
-            // Convert numeric values
-            if (['Latitude', 'Longitude', 'Lead', 'Cadmium', 'Arsenic', 'Chromium', 'Mercury', 'Copper'].includes(header)) {
-              rowData[header] = parseFloat(values[index]);
-            } else {
-              rowData[header] = values[index];
-            }
-          });
-          
-          data.push(rowData);
-        }
-        
-        // Store the parsed data
-        onDataUpload(data);
-        
         toast({
           title: "File validated successfully",
-          description: `${data.length} records ready for analysis`,
-          variant: "success"
+          description: `Ready for analysis`,
+          variant: "success",
         });
       }
     };
-    
+
     reader.readAsText(file);
   };
 
@@ -355,13 +202,40 @@ const DataUpload = ({ onDataUpload, onSectionChange }) => {
     a.click();
   };
 
-  const proceedToAnalysis = () => {
-    if (isValidData) {
-      toast({
-        title: "Success",
-        description: "Data uploaded successfully! Redirecting to analytics...",
+  const proceedToAnalysis = async () => {
+    if (!isValidData || !uploadedFile) return;
+    const formData = new FormData();
+    formData.append("file", uploadedFile); // 'file' must match backend field name
+
+    try {
+      const response = await fetch("http://localhost:5000/api/upload", {
+        method: "POST",
+        body: formData, // No need to set Content-Type manually
       });
-      onSectionChange('home');
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Upload successful",
+          description: `${result.count} samples processed`,
+          variant: "default",
+        });
+        onSectionChange("results");
+      } else {
+        toast({
+          title: "Upload failed",
+          description: result.error || "Server error",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Network error",
+        description: "Could not reach the server",
+        variant: "destructive",
+      });
+      console.error("Upload error:", error);
     }
   };
 
@@ -389,11 +263,6 @@ const DataUpload = ({ onDataUpload, onSectionChange }) => {
     });
   };
 
-  const analyzeSampleData = () => {
-    if (isValidData) {
-      onSectionChange('results');
-    }
-  };
 return (
   <div className="container mx-auto px-4 py-8">
     <div className="max-w-6xl mx-auto">

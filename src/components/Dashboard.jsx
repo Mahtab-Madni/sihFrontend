@@ -45,49 +45,17 @@ const Dashboard = ({ onSectionChange }) => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-<HeroCarousel onSectionChange={onSectionChange} />
-      {/* Hero Section with image */}
-      {/* <div className="relative h-[500px] md:h-[600px] w-full">
-        <img
-          src={heroImage}
-          alt="Water testing"
-          className="absolute inset-0 w-full h-full object-cover brightness-50"
-        />
-        <div className="relative container mx-auto px-4 py-16 md:py-24 flex flex-col justify-center h-full">
-          <div className="max-w-2xl text-white">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">
-              Advanced Water Quality Analysis Platform
-            </h1>
-            <p className="text-lg mb-6">
-              Comprehensive tools for analyzing groundwater contamination and generating scientific reports for environmental monitoring.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Button
-                size="lg"
-                onClick={() => onSectionChange('upload')}
-                className="bg-primary hover:bg-primary/90"
-              >
-                Upload Data
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="bg-background/20 hover:bg-background/30 border-white text-white"
-              >
-                Learn More
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
+      <HeroCarousel onSectionChange={onSectionChange} />
       {/* Features Section */}
       <section className="container mx-auto px-4">
         <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold mb-2">Powerful Analysis Tools</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">
+            Powerful Analysis Tools
+          </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Our platform provides comprehensive tools for water quality analysis
-            and contamination assessment using advanced scientific methodologies.
+            and contamination assessment using advanced scientific
+            methodologies.
           </p>
         </div>
 
@@ -121,7 +89,9 @@ const Dashboard = ({ onSectionChange }) => {
                 <CardContent className="pt-6">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="text-muted-foreground text-sm">{stat.label}</p>
+                      <p className="text-muted-foreground text-sm">
+                        {stat.label}
+                      </p>
                       <p className="text-3xl font-bold mt-1">{stat.value}</p>
                     </div>
                     <div className="bg-primary/10 w-10 h-10 rounded-lg flex items-center justify-center">
@@ -145,7 +115,9 @@ const Dashboard = ({ onSectionChange }) => {
           <CardContent className="p-6 md:p-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-6">
               <div>
-                <h3 className="text-xl md:text-2xl font-bold mb-2">Ready to analyze your water quality data?</h3>
+                <h3 className="text-xl md:text-2xl font-bold mb-2">
+                  Ready to analyze your water quality data?
+                </h3>
                 <p className="text-primary-foreground/80 max-w-xl">
                   Upload your sample data to generate comprehensive analysis
                   reports and visualizations.
@@ -154,7 +126,7 @@ const Dashboard = ({ onSectionChange }) => {
               <Button
                 size="lg"
                 variant="secondary"
-                onClick={() => onSectionChange('upload')}
+                onClick={() => onSectionChange("upload")}
                 className="whitespace-nowrap"
               >
                 Start Analysis
@@ -165,50 +137,46 @@ const Dashboard = ({ onSectionChange }) => {
       </section>
 
       {/* Scrolling Logos */}
-      <section style={{ maxWidth: '1280px', margin: '2rem auto 3rem auto', padding: '0 1rem' }}>
-        <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '1rem', border: '1px solid rgba(0,0,0,0.1)', background: 'rgba(255,255,255,0.05)', padding: '1rem' }}>
-          <div style={{ width: '100%', overflow: 'hidden' }}>
-            <div className="animate-scroll-track" style={{ display: 'flex', gap: '2rem', willChange: 'transform' }}>
+      <section className="max-w-[1280px] mx-auto mt-8 mb-12 px-4">
+        <div className="relative overflow-hidden rounded-xl border border-black/10 bg-white/5 p-4">
+          <div className="w-full overflow-hidden">
+            <div className="flex gap-8 animate-scroll-track will-change-transform">
               {[...logos, ...logos].map((src, i) => (
                 <div
                   key={i}
-                  style={{
-                    flexShrink: 0,
-                    width: '10rem',
-                    height: '6rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background: 'rgba(255,255,255,0.05)',
-                    borderRadius: '0.5rem',
-                    padding: '1rem',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                  }}
+                  className="flex-shrink-0 w-40 h-24 flex items-center justify-center bg-white/5 rounded-md p-4 shadow-sm"
                 >
                   <img
                     src={src}
                     alt={`logo-${i}`}
-                    style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                    className="max-h-full max-w-full object-contain"
                   />
                 </div>
               ))}
             </div>
           </div>
-          <style>{`
-            @keyframes scrollTrack {
-              0% { transform: translateX(0); }
-              100% { transform: translateX(-50%); }
-            }
-            .animate-scroll-track {
-              animation: scrollTrack 24s linear infinite;
-            }
-            @media (prefers-reduced-motion: reduce) {
-              .animate-scroll-track { animation: none; }
-            }
-          `}</style>
         </div>
-      </section>
 
+        {/* Tailwind animation extension */}
+        <style>
+          {`
+            @layer utilities {
+              @keyframes scrollTrack {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+              }
+              .animate-scroll-track {
+                animation: scrollTrack 24s linear infinite;
+              }
+              @media (prefers-reduced-motion: reduce) {
+                .animate-scroll-track {
+                  animation: none;
+                }
+              }
+            }
+          `}
+        </style>
+      </section>
     </div>
   );
 };

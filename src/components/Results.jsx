@@ -1,95 +1,188 @@
-import React from 'react';
+import axios from 'axios';
+import { saveAs } from "file-saver";
+import html2canvas from "html2canvas";
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { Download, BarChart3, PieChart as PieChartIcon, AlertTriangle } from 'lucide-react';
+import { Download, MapPin, BarChart3, PieChart as PieChartIcon, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-const Results = ({ data }) => {
+const Results = () => {
   const { toast } = useToast();
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState([]);
+  const [pieData, setPieData] = useState([]);
+  const [totalSamples, setTotalSamples] = useState(null);
+  const [showAll, setShowAll] = useState(false);
+  const visibleData = showAll
+    ? [...data].sort((a, b) => parseInt(a.sampleId) - parseInt(b.sampleId))
+    : [...data]
+        .sort((a, b) => parseInt(a.sampleId) - parseInt(b.sampleId))
+        .slice(0, 15);
 
-  // Calculate indices
-  const calculateIndices = (sample) => {
-    const hpi = (sample.Lead * 0.5 + sample.Cadmium * 2.0 + sample.Arsenic * 1.5 + sample.Chromium * 0.8) * 10;
-    const mi = (sample.Lead + sample.Cadmium + sample.Arsenic + sample.Chromium) / 4;
-    const cd = Math.max(
-      sample.Lead / 0.05,
-      sample.Cadmium / 0.005,
-      sample.Arsenic / 0.01,
-      sample.Chromium / 0.05
-    );
-    return { hpi: Math.round(hpi), mi: Math.round(mi * 100) / 100, cd: Math.round(cd * 100) / 100 };
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/charts/pollution-indices")
+      .then((res) => {
+        const formatted = res.data.map((entry) => ({
+          name: entry._id,
+          HPI: entry.avgHPI,
+          MI: entry.avgMI * 10,
+          Cd: entry.avgCD * 5,
+        }));
+        setChartData(formatted);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch chart data:", err);
+        toast({
+          title: "Chart data error",
+          description: "Unable to load pollution indices.",
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/samples")
+      .then((res) => {
+        setData(res.data); // no need for type casting
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching samples:", err);
+        toast({
+          title: "Sample fetch error",
+          description: "Unable to load sample data.",
+        });
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/summary")
+      .then((res) => {
+        const categories = res.data.categories;
+        const total = res.data.totalSamples;
+
+        const formatted = categories.map((cat) => ({
+          name: cat._id.charAt(0).toUpperCase() + cat._id.slice(1),
+          value: cat.count,
+          color:
+            cat._id === "safe"
+              ? "#22c55e"
+              : cat._id === "moderate"
+              ? "#f59e0b"
+              : "#ef4444",
+        }));
+
+        setPieData(formatted);
+        setTotalSamples(total);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch category summary:", err);
+        toast({
+          title: "Summary error",
+          description: "Unable to load summary data.",
+        });
+      });
+  }, []);
+
+  const unsafeCount = pieData
+    .filter((item) => item.name === "Unsafe")
+    .reduce((sum, item) => sum + item.value, 0);
+
+
+  const downloadCSV = async () => {
+      try {
+      toast({
+        title: 'Exporting Data',
+        description: 'Preparing CSV file...',
+        variant: 'default',
+      });
+
+      const response = await axios.get('http://localhost:5000/api/export/csv', {
+        responseType: 'blob',
+      });
+
+      const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' });
+      saveAs(blob, 'Water_Analysis_Data.csv');
+
+          toast({
+            title: 'CSV Exported',
+            description: 'Your data has been saved as CSV.',
+          });
+    } catch (error) {
+      console.error('CSV export failed:', error);
+      toast({
+        title: 'Export Failed',
+        description: 'Unable to export CSV data.',
+        variant: 'destructive',
+      });
+    }
   };
 
-  const getContaminationLevel = (hpi) => {
-    if (hpi < 100) return { level: 'Safe', variant: 'safe' };
-    if (hpi ==100) return { level: 'Moderate', variant: 'moderate' };
-    return { level: 'Unsafe', variant: 'unsafe' };
-  };
+  const downloadPdf = async () => { 
+    try {
+      toast({
+        title: "Generating Report",
+        description: "Preparing your PDF report with charts and map...",
+        variant: "default",
+      });
 
-  const resultsData = data.map((sample) => {
-    const indices = calculateIndices(sample);
-    const contamination = getContaminationLevel(indices.hpi);
-    return {
-      ...sample,
-      ...indices,
-      contaminationLevel: contamination.level,
-      contaminationVariant: contamination.variant,
-    };
-  });
+      // Capture chart and map images by ID
+      const captureImage = async (id) => {
+        const el = document.getElementById(id);
+        if (!el) return null;
+        const canvas = await html2canvas(el);
+        return canvas.toDataURL("image/png");
+      };
 
-  const safeCount = resultsData.filter((item) => item.contaminationLevel === 'Safe').length;
-  const moderateCount = resultsData.filter((item) => item.contaminationLevel === 'Moderate').length;
-  const unsafeCount = resultsData.filter((item) => item.contaminationLevel === 'Unsafe').length;
+      const pollutionChart = await captureImage("pollution-chart");
+      const pieChart = await captureImage("pie-chart");
+      const mapSnapshot = await captureImage("map-visual");
 
-  const pieData = [
-    { name: 'Safe', value: safeCount, color: '#22c55e' },
-    { name: 'Moderate', value: moderateCount, color: '#f59e0b' },
-    { name: 'Unsafe', value: unsafeCount, color: '#ef4444' },
-  ];
+      // Send request to backend with chart images
+      const response = await axios.post(
+        "http://localhost:5000/api/export/pdf",
+        {
+          samples: data, // your sample array
+          charts: {
+            pollutionChart,
+            pieChart,
+            mapSnapshot,
+          },
+        },
+        { responseType: "blob" }
+      );
 
-  const barData = resultsData.slice(0, 10).map((item) => ({
-    name: item.Sample_ID,
-    HPI: item.hpi,
-    MI: item.mi * 10,
-    CD: item.cd * 5,
-  }));
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      saveAs(blob, "Water_Analysis_Report.pdf");
 
-  const downloadCSV = () => {
-    const headers = ['Sample_ID', 'Latitude', 'Longitude', 'Lead', 'Cadmium', 'Arsenic', 'Chromium', 'HPI', 'MI', 'CD', 'Contamination Level'];
-    const csvRows = [
-      headers.join(','),
-      ...resultsData.map((row) => [
-        row.Sample_ID,
-        row.Latitude,
-        row.Longitude,
-        row.Lead,
-        row.Cadmium,
-        row.Arsenic,
-        row.Chromium,
-        row.hpi,
-        row.mi,
-        row.cd,
-        row.contaminationLevel,
-      ].join(',')),
-    ];
-    const csvString = csvRows.join('\n');
-    const blob = new Blob([csvString], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.setAttribute('href', url);
-    a.setAttribute('download', 'water_quality_analysis.csv');
-    a.click();
-    toast({ title: 'Report Downloaded', description: 'CSV report downloaded successfully' });
-  };
+      toast({
+        title: "Report Ready",
+        description: "Your PDF report has been downloaded.",
+        variant: "default",
+      });
+    } catch (error) {
+      console.error("PDF download failed:", error);
+      toast({
+        title: "Download Failed",
+        description: "Something went wrong while generating the report.",
+        variant: "destructive",
+      });
+    }
+  }
 
   const getBadgeColor = (variant) => {
     switch (variant) {
-      case 'safe': return 'bg-green-100 text-green-800 hover:bg-green-100';
-      case 'moderate': return 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100';
-      case 'unsafe': return 'bg-red-100 text-red-800 hover:bg-red-100';
+      case 'safe': return 'bg-green-600 hover:bg-green-700';
+      case 'moderate': return 'bg-yellow-600  hover:bg-yellow-700';
+      case 'unsafe': return 'bg-red-600 hover:bg-red-700';
       default: return '';
     }
   };
@@ -100,75 +193,164 @@ const Results = ({ data }) => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold">Water Quality Analysis Results</h1>
-          <p className="text-muted-foreground">Analysis of {resultsData.length} water samples</p>
+          <p className="text-muted-foreground">
+            Analysis of {totalSamples !== null ? totalSamples : "Loading..."}{" "}
+            water samples
+          </p>
         </div>
         <Button onClick={downloadCSV} className="flex items-center gap-2">
           <Download className="h-4 w-4" /> Download CSV
+        </Button>
+        <Button onClick={downloadPdf} className="flex items-center gap-2">
+          <Download className="h-4 w-4" /> Download PDF
         </Button>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader><CardTitle>Contamination Summary</CardTitle></CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={200}>
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={2}
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent*100).toFixed(0)}%`}
-                >
-                  {pieData.map((entry, idx) => <Cell key={idx} fill={entry.color} />)}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+        <Card
+          id="pie-chart"
+          className="bg-white/5 border border-border/40 rounded-xl shadow-sm"
+        >
+          <CardHeader>
+            <CardTitle className="text-lg font-bold text-primary">
+              Contamination Summary
+            </CardTitle>
+          </CardHeader>
 
-        <Card>
-          <CardHeader><CardTitle>Indices Comparison</CardTitle></CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={barData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="HPI" fill="#3b82f6" />
-                <Bar dataKey="MI" fill="#8b5cf6" />
-                <Bar dataKey="CD" fill="#ef4444" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+          <CardContent className="flex flex-col md:flex-row items-center justify-between gap-6">
+            {/* Pie Chart */}
+            <div className="w-full md:w-2/3">
+              {pieData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={250}>
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={2}
+                      dataKey="value"
+                      label={({ name, percent }) =>
+                        `${name} ${(percent * 100).toFixed(0)}%`
+                      }
+                    >
+                      {pieData.map((entry, idx) => (
+                        <Cell key={idx} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <p className="text-muted-foreground text-center">
+                  No data available
+                </p>
+              )}
+            </div>
 
-        <Card>
-          <CardHeader><CardTitle>Risk Assessment</CardTitle></CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {pieData.map((item) => (
-                <div key={item.name} className="flex justify-between items-center">
+            {/* Legend */}
+            <div className="w-full md:w-1/3 space-y-3">
+              {pieData.map((entry, idx) => (
+                <div key={idx} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-                    <span>{item.name}</span>
+                    <span
+                      className="inline-block w-4 h-4 rounded-full"
+                      style={{ backgroundColor: entry.color }}
+                    ></span>
+                    <span className="text-sm font-medium">{entry.name}</span>
                   </div>
-                  <span className="font-medium">{item.value} samples</span>
+                  <span className="text-sm text-muted-foreground">
+                    {entry.value}
+                  </span>
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card
+          id="pollution-chart"
+          className="bg-white/5 border border-border/40 rounded-xl shadow-sm"
+        >
+          <CardHeader>
+            <CardTitle className="text-lg font-bold text-primary">
+              Indices Comparison
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            {chartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart
+                  data={chartData}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar
+                    dataKey="HPI"
+                    fill="#3b82f6"
+                    name="HPI (Health Pollution Index)"
+                  />
+                  <Bar dataKey="MI" fill="#8b5cf6" name="MI (Metal Index)" />
+                  <Bar
+                    dataKey="Cd"
+                    fill="#ef4444"
+                    name="Cd (Contamination Degree)"
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-muted-foreground text-center">
+                No chart data available
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white/5 border border-border/40 rounded-xl shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-lg font-bold text-primary">
+              Risk Assessment
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            <div className="space-y-4">
+              {pieData.map((item) => (
+                <div
+                  key={item.name}
+                  className="flex justify-between items-center text-sm"
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="inline-block w-4 h-4 rounded-full"
+                      style={{ backgroundColor: item.color }}
+                    ></span>
+                    <span className="font-medium text-muted-foreground">
+                      {item.name}
+                    </span>
+                  </div>
+                  <span className="font-semibold text-gray-800">
+                    {item.value} samples
+                  </span>
+                </div>
+              ))}
+
               {unsafeCount > 0 && (
-                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md flex items-start gap-2">
-                  <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5" />
+                <div className="mt-6 p-4 bg-red-100 border border-red-300 rounded-md flex items-start gap-3">
+                  <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-red-800">Warning</p>
+                    <p className="text-sm font-semibold text-red-800 mb-3">
+                      Warning
+                    </p>
                     <p className="text-xs text-red-700">
-                      {unsafeCount} water samples exceed safe contamination limits and need attention.
+                      {unsafeCount} water samples exceed safe contamination
+                      limits and need attention.
                     </p>
                   </div>
                 </div>
@@ -194,8 +376,10 @@ const Results = ({ data }) => {
       {/* Detailed Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Detailed Analysis Results</CardTitle>
-          <CardDescription>Heavy metal contamination indices and risk assessment</CardDescription>
+          <CardTitle>Analysis Results</CardTitle>
+          <CardDescription>
+            Click a sample to view detailed report
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border">
@@ -211,23 +395,55 @@ const Results = ({ data }) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {resultsData.map((row, idx) => (
-                  <TableRow key={idx}>
-                    <TableCell className="font-medium">{row.Sample_ID}</TableCell>
-                    <TableCell>{row.Latitude.toFixed(4)}, {row.Longitude.toFixed(4)}</TableCell>
-                    <TableCell>{row.hpi}</TableCell>
-                    <TableCell>{row.mi}</TableCell>
-                    <TableCell>{row.cd}</TableCell>
-                    <TableCell>
-                      <Badge className={getBadgeColor(row.contaminationVariant)}>
-                        {row.contaminationLevel}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {[...visibleData]
+                  .sort((a, b) => {
+                    const idA = parseInt(a.sampleId.replace(/\D/g, "")) || 0;
+                    const idB = parseInt(b.sampleId.replace(/\D/g, "")) || 0;
+                    return idA - idB;
+                  })
+                  .slice(0, showAll ? visibleData.length : 15)
+                  .map((sample) => (
+                    <TableRow
+                      key={sample.sampleId}
+                      className="cursor-pointer hover:bg-muted"
+                    >
+                      <TableCell className="px-10">{sample.sampleId}</TableCell>
+                      <TableCell className= "translate-x-[-30px]">
+                        <div className="flex items-center space-x-1">
+                          <MapPin className="h-3 w-3 text-muted-foreground" />
+                          <span>
+                            {sample.latitude.toFixed(4)},{" "}
+                            {sample.longitude.toFixed(4)}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>{sample.indices.hpi}</TableCell>
+                      <TableCell>{sample.indices.mi}</TableCell>
+                      <TableCell>{sample.indices.cd}</TableCell>
+                      <TableCell>
+                        <span
+                          className={`inline-flex items-center justify-center px-3 py-2 text-xs font-medium text-white rounded w-17 h-5 ${getBadgeColor(
+                            sample.category
+                          )}`}
+                        >
+                          {sample.category}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </div>
+          {data.length > 15 && (
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="px-4 py-2 text-sm font-medium rounded-md bg-primary text-white hover:bg-primary/90 transition"
+              >
+                {showAll ? "Show Less" : `Show All (${data.length})`}
+              </button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
