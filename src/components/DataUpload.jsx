@@ -273,7 +273,7 @@ return (
         <div className="flex-grow-[4]" style={{ flexGrow: 4 }}>
           <Card className="h-full shadow-lg border-2 border-blue-300">
             <CardHeader className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-t-lg">
-              <CardTitle className="text-xl font-semibold" style={{color:'Black'}}>📂 {t('dataUpload.uploadDataFile')}</CardTitle>
+              <CardTitle className="text-xl font-semibold" style={{color:'Black'}}>📂 {t('Upload Data File')}</CardTitle>
             </CardHeader>
             <CardContent>
               {!uploadedFile ? (
@@ -410,7 +410,7 @@ return (
                     variant="outline"
                     size="sm"
                     onClick={downloadSampleCSV}
-                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 border-green-300 
+                    className="w-full flex items-center h-7 justify-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 border-green-300 
                                text-green-700 hover:from-green-100 hover:to-emerald-100 hover:border-green-400 transition-all duration-200"
                   >
                     <FileText className="h-4 w-4" />

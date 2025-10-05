@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Download, MapPin, BarChart3, PieChart as PieChartIcon, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import SampleDetails from './SampleReport';
 
 const Results = () => {
   const { toast } = useToast();
@@ -18,6 +19,7 @@ const Results = () => {
   const [pieData, setPieData] = useState([]);
   const [totalSamples, setTotalSamples] = useState(null);
   const [showAll, setShowAll] = useState(false);
+  const [selectedSample, setSelectedSample] = useState(null);
   const visibleData = showAll
     ? [...data].sort((a, b) => parseInt(a.sampleId) - parseInt(b.sampleId))
     : [...data]
@@ -185,6 +187,14 @@ const Results = () => {
       case 'unsafe': return 'bg-red-600 hover:bg-red-700';
       default: return '';
     }
+  };
+
+  const handleRowClick = (sample) => {
+    setSelectedSample(sample);
+  };
+
+  const handleBack = () => {
+    setSelectedSample(null);
   };
 
   return (
@@ -382,58 +392,65 @@ const Results = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Sample ID</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead>HPI</TableHead>
-                  <TableHead>MI</TableHead>
-                  <TableHead>CD</TableHead>
-                  <TableHead>Risk Level</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {[...visibleData]
-                  .sort((a, b) => {
-                    const idA = parseInt(a.sampleId.replace(/\D/g, "")) || 0;
-                    const idB = parseInt(b.sampleId.replace(/\D/g, "")) || 0;
-                    return idA - idB;
-                  })
-                  .slice(0, showAll ? visibleData.length : 15)
-                  .map((sample) => (
-                    <TableRow
-                      key={sample.sampleId}
-                      className="cursor-pointer hover:bg-muted"
-                    >
-                      <TableCell className="px-10">{sample.sampleId}</TableCell>
-                      <TableCell className= "translate-x-[-30px]">
-                        <div className="flex items-center space-x-1">
-                          <MapPin className="h-3 w-3 text-muted-foreground" />
-                          <span>
-                            {sample.latitude.toFixed(4)},{" "}
-                            {sample.longitude.toFixed(4)}
+          {selectedSample ? (
+            <SampleDetails sample={selectedSample} onBack={handleBack} />
+          ) : (
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Sample ID</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>HPI</TableHead>
+                    <TableHead>MI</TableHead>
+                    <TableHead>CD</TableHead>
+                    <TableHead>Risk Level</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {[...visibleData]
+                    .sort((a, b) => {
+                      const idA = parseInt(a.sampleId.replace(/\D/g, "")) || 0;
+                      const idB = parseInt(b.sampleId.replace(/\D/g, "")) || 0;
+                      return idA - idB;
+                    })
+                    .slice(0, showAll ? visibleData.length : 15)
+                    .map((sample) => (
+                      <TableRow
+                        key={sample.sampleId}
+                        onClick={() => handleRowClick(sample)}
+                        className="cursor-pointer hover:bg-muted"
+                      >
+                        <TableCell className="px-10">
+                          {sample.sampleId}
+                        </TableCell>
+                        <TableCell className="translate-x-[-30px]">
+                          <div className="flex items-center space-x-1">
+                            <MapPin className="h-3 w-3 text-muted-foreground" />
+                            <span>
+                              {sample.latitude.toFixed(4)},{" "}
+                              {sample.longitude.toFixed(4)}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>{sample.indices.hpi}</TableCell>
+                        <TableCell>{sample.indices.mi}</TableCell>
+                        <TableCell>{sample.indices.cd}</TableCell>
+                        <TableCell>
+                          <span
+                            className={`inline-flex items-center justify-center px-3 py-2 text-xs font-medium text-white rounded w-17 h-5 ${getBadgeColor(
+                              sample.category
+                            )}`}
+                          >
+                            {sample.category}
                           </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{sample.indices.hpi}</TableCell>
-                      <TableCell>{sample.indices.mi}</TableCell>
-                      <TableCell>{sample.indices.cd}</TableCell>
-                      <TableCell>
-                        <span
-                          className={`inline-flex items-center justify-center px-3 py-2 text-xs font-medium text-white rounded w-17 h-5 ${getBadgeColor(
-                            sample.category
-                          )}`}
-                        >
-                          {sample.category}
-                        </span>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
           {data.length > 15 && (
             <div className="mt-4 text-center">
               <button
